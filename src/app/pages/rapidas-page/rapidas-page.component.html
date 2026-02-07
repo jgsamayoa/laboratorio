@@ -1,0 +1,88 @@
+<div class="card" *ngIf="loading">Cargando…</div>
+
+<div class="grid" *ngIf="!loading">
+  <div class="card">
+    <h2>Pruebas rápidas</h2>
+    <p class="footer-note">
+      Catálogo desde <code>src/assets/db.json</code> → <code>catalogs.rapidTests</code>.
+    </p>
+
+    <div class="row">
+      <div class="field"><label>Nombre completo *</label><input [formControl]="form.controls.fullName" /></div>
+      <div class="field"><label>DPI</label><input [formControl]="form.controls.dpi" /></div>
+      <div class="field"><label>Fecha de nacimiento</label><input type="date" [formControl]="form.controls.birthDate" /></div>
+      <div class="field">
+        <label>Sexo *</label>
+        <select [formControl]="form.controls.sex">
+          <option *ngFor="let s of sexOptions" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+      <div class="field"><label>Médico</label><input [formControl]="form.controls.doctor" /></div>
+    </div>
+
+    <hr class="sep" />
+
+    <div class="row">
+      <div class="field"><label>Código de validación *</label><input [formControl]="form.controls.validationCode" /></div>
+      <div class="field"><label>Fecha/hora recepción *</label><input [formControl]="form.controls.receptionAt" /></div>
+      <div class="field"><label>Fecha/hora impresión *</label><input [formControl]="form.controls.printedAt" /></div>
+    </div>
+
+    <hr class="sep" />
+
+    <div class="row">
+      <div class="field">
+        <label>Tipo de prueba *</label>
+        <select [formControl]="form.controls.selectedTestId">
+          <option *ngFor="let t of catalog" [value]="t.id">{{ t.name }}</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Resultado *</label>
+        <select [formControl]="form.controls.selectedResult">
+          <option value="Negativo">Negativo</option>
+          <option value="Positivo">Positivo</option>
+          <option value="No reactivo">No reactivo</option>
+          <option value="Reactivo">Reactivo</option>
+          <option value="Indeterminado">Indeterminado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top: 10px;">
+      <label>Observaciones</label>
+      <textarea [formControl]="form.controls.notes"></textarea>
+    </div>
+
+    <div class="btns" style="margin-top: 10px;">
+      <button type="button" (click)="saveAndDownload()">Guardar y descargar PDF</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Historial</h2>
+    <table class="table" *ngIf="reports.length; else empty">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Paciente</th>
+          <th>Prueba</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of reports.slice(0, 12)">
+          <td>{{ r.createdAt | date:'short' }}</td>
+          <td>{{ r.patientSnapshot.fullName }}</td>
+          <td>{{ r.result.items?.[0]?.testName }}</td>
+          <td><button class="secondary" type="button" (click)="loadFromHistory(r.id)">Cargar</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #empty>
+      <div class="footer-note">Aún no hay reportes guardados.</div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "hematologia-util": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+            "builder": "@angular-devkit/build-angular:application",
+            "options": {
+              "outputPath": "dist/hematologia-util",
+              "index": "src/index.html",
+              "browser": "src/main.ts",
+              "polyfills": ["zone.js"],
+              "tsConfig": "tsconfig.app.json",
+              "assets": ["src/favicon.ico", "src/assets"],
+              "styles": ["src/styles.css"],
+              "scripts": []
+            },
+            "configurations": {
+              "production": {
+                "optimization": true,
+                "outputHashing": "all",
+                "sourceMap": false,
+                "namedChunks": false,
+                "aot": true,
+                "extractLicenses": true
+              },
+              "development": {
+                "optimization": false,
+                "sourceMap": true,
+                "namedChunks": true,
+                "aot": true,
+                "extractLicenses": false
+              }
+            },
+            "defaultConfiguration": "development"
+          },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "hematologia-util:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "hematologia-util:build:production"
+            },
+            "development": {
+              "buildTarget": "hematologia-util:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

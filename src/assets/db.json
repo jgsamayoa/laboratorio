@@ -1,0 +1,53 @@
+{
+  "lab": {
+    "name": "Laboratorio Clínico El Ángel",
+    "address": "Aldea El Cerinal, Barberena, Santa Rosa",
+    "hours": "Horario Lunes a Viernes de 8:00 a 16:00 horas",
+    "phone": "5555-4444",
+    "validationUrl": "http://labclinicoelangel.com/validar",
+    "disclaimer": "Todo examen de laboratorio debe ser interpretado por un médico."
+  },
+  "referenceRanges": {
+    "adult_male": {
+      "RBC": "4.5–5.9 x10^6/µL",
+      "HGB": "13.5–17.5 g/dL",
+      "HCT": "41–53 %",
+      "MCV": "80–96 fL",
+      "MCH": "27–33 pg",
+      "MCHC": "32–36 g/dL",
+      "RDW_CV": "11.5–14.5 %",
+      "WBC": "4.0–11.0 x10^3/µL",
+      "PLT": "150–450 x10^3/µL",
+      "NEU_PCT": "40–70 %",
+      "LYM_PCT": "20–45 %",
+      "MONO_PCT": "2–10 %",
+      "EOS_PCT": "1–6 %",
+      "BASO_PCT": "0–1 %"
+    }
+  },
+  "patients": [],
+  "cbcReports": [],
+  "catalogs": {
+    "rapidTests": [
+      {
+        "id": "covid_ag",
+        "name": "Antígeno COVID-19",
+        "reference": "",
+        "units": ""
+      },
+      {
+        "id": "dengue_ns1",
+        "name": "Dengue NS1",
+        "reference": "",
+        "units": ""
+      },
+      {
+        "id": "influenza_ab",
+        "name": "Influenza A/B",
+        "reference": "",
+        "units": ""
+      }
+    ]
+  },
+  "rapidReports": []
+}

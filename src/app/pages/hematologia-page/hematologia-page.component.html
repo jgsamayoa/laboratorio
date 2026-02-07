@@ -1,0 +1,165 @@
+<div class="header">
+  <div class="brand">
+    <h1>Hematología (Genrui KT6300) – Util de Resultados</h1>
+    <small>Ingreso de datos + emisión de PDF en el formato del laboratorio.</small>
+  </div>
+  <div class="btns">
+    <span class="pill">Base de datos: JSON (assets) + localStorage</span>
+    <button class="secondary" type="button" (click)="now()">Actualizar hora impresión</button>
+    <button type="button" (click)="saveAndDownload()">Guardar y descargar PDF</button>
+  </div>
+</div>
+
+<div *ngIf="loading" class="card">Cargando…</div>
+
+<div class="grid" *ngIf="!loading">
+  <div class="card">
+    <h2>Datos del paciente</h2>
+    <div class="row">
+      <div class="field">
+        <label>Nombre completo *</label>
+        <input [formControl]="form.controls.fullName" placeholder="Ej. Juan Pérez" />
+        <small class="hint" *ngIf="form.controls.fullName.touched && form.controls.fullName.invalid">
+          Requerido (mínimo 3 caracteres).
+        </small>
+      </div>
+      <div class="field">
+        <label>DPI</label>
+        <input [formControl]="form.controls.dpi" placeholder="Ej. 1234567890101" />
+      </div>
+      <div class="field">
+        <label>Fecha de nacimiento</label>
+        <input type="date" [formControl]="form.controls.birthDate" />
+      </div>
+      <div class="field">
+        <label>Género *</label>
+        <select [formControl]="form.controls.sex">
+          <option *ngFor="let s of sexOptions" [value]="s">{{s}}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Médico</label>
+        <input [formControl]="form.controls.doctor" placeholder="Ej. Dra. X" />
+      </div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h2>Identificación del reporte</h2>
+    <div class="row">
+      <div class="field">
+        <label>Código de validación *</label>
+        <input [formControl]="form.controls.validationCode" placeholder="Ej. 1888-0001" />
+      </div>
+      <div class="field">
+        <label>Equipo *</label>
+        <input [formControl]="form.controls.machine" />
+      </div>
+      <div class="field">
+        <label>Fecha/hora de recepción *</label>
+        <input type="datetime-local" [value]="form.controls.receptionAt.value?.slice(0,16)"
+          (input)="form.controls.receptionAt.setValue($any($event.target).valueAsDate ? $any($event.target).valueAsDate.toISOString() : ($any($event.target).value + ':00.000Z'))" />
+        <small class="hint">Tip: si tu navegador no da valueAsDate, igual guarda ISO aproximado.</small>
+      </div>
+      <div class="field">
+        <label>Fecha/hora de impresión *</label>
+        <input type="datetime-local" [value]="form.controls.printedAt.value?.slice(0,16)"
+          (input)="form.controls.printedAt.setValue($any($event.target).valueAsDate ? $any($event.target).valueAsDate.toISOString() : ($any($event.target).value + ':00.000Z'))" />
+      </div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h2>Serie roja</h2>
+    <div class="row">
+      <div class="field"><label>RBC</label><input type="number" step="0.01" [formControl]="form.controls.RBC" placeholder="x10⁶/µL" /></div>
+      <div class="field"><label>HGB</label><input type="number" step="0.01" [formControl]="form.controls.HGB" placeholder="g/dL" /></div>
+      <div class="field"><label>HCT</label><input type="number" step="0.1" [formControl]="form.controls.HCT" placeholder="%" /></div>
+      <div class="field"><label>MCV</label><input type="number" step="0.1" [formControl]="form.controls.MCV" placeholder="fL" /></div>
+      <div class="field"><label>MCH</label><input type="number" step="0.1" [formControl]="form.controls.MCH" placeholder="pg" /></div>
+      <div class="field"><label>MCHC</label><input type="number" step="0.1" [formControl]="form.controls.MCHC" placeholder="g/dL" /></div>
+      <div class="field"><label>RDW-CV</label><input type="number" step="0.1" [formControl]="form.controls.RDW_CV" placeholder="%" /></div>
+      <div class="field"><label>RDW-SD</label><input type="number" step="0.1" [formControl]="form.controls.RDW_SD" placeholder="fL" /></div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h2>Serie blanca</h2>
+    <div class="row">
+      <div class="field"><label>WBC</label><input type="number" step="0.01" [formControl]="form.controls.WBC" placeholder="x10³/µL" /></div>
+      <div class="field"><label>Neutrófilos %</label><input type="number" step="0.1" [formControl]="form.controls.NEU_PCT" /></div>
+      <div class="field"><label>Neutrófilos abs</label><input type="number" step="0.01" [formControl]="form.controls.NEU_ABS" placeholder="x10³/µL" /></div>
+
+      <div class="field"><label>Linfocitos %</label><input type="number" step="0.1" [formControl]="form.controls.LYM_PCT" /></div>
+      <div class="field"><label>Linfocitos abs</label><input type="number" step="0.01" [formControl]="form.controls.LYM_ABS" placeholder="x10³/µL" /></div>
+
+      <div class="field"><label>Monocitos %</label><input type="number" step="0.1" [formControl]="form.controls.MONO_PCT" /></div>
+      <div class="field"><label>Monocitos abs</label><input type="number" step="0.01" [formControl]="form.controls.MONO_ABS" placeholder="x10³/µL" /></div>
+
+      <div class="field"><label>Eosinófilos %</label><input type="number" step="0.1" [formControl]="form.controls.EOS_PCT" /></div>
+      <div class="field"><label>Eosinófilos abs</label><input type="number" step="0.01" [formControl]="form.controls.EOS_ABS" placeholder="x10³/µL" /></div>
+
+      <div class="field"><label>Basófilos %</label><input type="number" step="0.1" [formControl]="form.controls.BASO_PCT" /></div>
+      <div class="field"><label>Basófilos abs</label><input type="number" step="0.01" [formControl]="form.controls.BASO_ABS" placeholder="x10³/µL" /></div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h2>Serie plaquetaria</h2>
+    <div class="row">
+      <div class="field"><label>PLT</label><input type="number" step="1" [formControl]="form.controls.PLT" placeholder="x10³/µL" /></div>
+      <div class="field"><label>MPV</label><input type="number" step="0.1" [formControl]="form.controls.MPV" placeholder="fL" /></div>
+      <div class="field"><label>PDW</label><input type="number" step="0.1" [formControl]="form.controls.PDW" /></div>
+      <div class="field"><label>PCT</label><input type="number" step="0.01" [formControl]="form.controls.PCT" placeholder="%" /></div>
+    </div>
+
+    <hr class="sep"/>
+
+    <h2>Observaciones</h2>
+    <div class="field">
+      <textarea [formControl]="form.controls.notes" placeholder="Observaciones / Flags / Comentarios"></textarea>
+      <small class="hint">Si no aplica, puede dejarse vacío.</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Historial local</h2>
+    <p class="footer-note">
+      Los registros se guardan en el navegador (localStorage). Para ambiente multiusuario, esto se migra a API/BD.
+    </p>
+
+    <hr class="sep"/>
+
+    <h2>Últimos reportes</h2>
+    <table class="table" *ngIf="reports.length; else emptyReports">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Paciente</th>
+          <th>Código</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of reports.slice(0,10)">
+          <td>{{ r.createdAt | date:'short' }}</td>
+          <td>{{ r.patientSnapshot.fullName }}</td>
+          <td>{{ r.result.validationCode }}</td>
+          <td><button class="secondary" type="button" (click)="loadFromHistory(r.id)">Cargar</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #emptyReports>
+      <div class="footer-note">Aún no hay reportes guardados.</div>
+    </ng-template>
+
+    <hr class="sep"/>
+
+    <h2>Notas</h2>
+    <div class="footer-note">
+      Esta util genera PDF con <b>pdfmake</b> y replica el estilo base del formato Word (código de validación,
+      encabezado, datos del paciente, tabla, pie y texto legal). Para QR real se puede agregar una librería de QR.
+    </div>
+  </div>
+</div>
